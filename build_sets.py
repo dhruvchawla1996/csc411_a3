@@ -1,39 +1,40 @@
 # Imports
 import random
 
-"""
-Build training, testing and validation sets with labels 
-From content in clean_fake.txt and clean_real.txt
 
-PARAMETERS
-----------
-None
-
-RETURNS
--------
-training_set: list of list of strings
-    contains headlines broken into words
-
-validation_set: list of list of strings
-    contains headlines broken into words
-
-testing_set: list of list of strings
-    contains headlines broken into words
-
-training_label: list of 0 or 1
-    0 = fake news | 1 = real news for corresponding i-th element in training_set
-
-validation_label: list of 0 or 1
-    0 = fake news | 1 = real news for corresponding i-th element in validation_set
-
-testing_label: list of 0 or 1
-    0 = fake news | 1 = real news for corresponding i-th element in testing_set
-
-REQUIRES
---------
-clean_fake.txt and clean_test.txt to be present in working directory
-"""
 def build_sets():
+    """
+    Build training, testing and validation sets with labels 
+    From content in clean_fake.txt and clean_real.txt
+
+    PARAMETERS
+    ----------
+    None
+
+    RETURNS
+    -------
+    training_set: list of list of strings
+        contains headlines broken into words
+
+    validation_set: list of list of strings
+        contains headlines broken into words
+
+    testing_set: list of list of strings
+        contains headlines broken into words
+
+    training_label: list of 0 or 1
+        0 = fake news | 1 = real news for corresponding i-th element in training_set
+
+    validation_label: list of 0 or 1
+        0 = fake news | 1 = real news for corresponding i-th element in validation_set
+
+    testing_label: list of 0 or 1
+        0 = fake news | 1 = real news for corresponding i-th element in testing_set
+
+    REQUIRES
+    --------
+    clean_fake.txt and clean_test.txt to be present in working directory
+    """
     fname_fake, fname_real = "clean_fake.txt", "clean_real.txt"
 
     content_fake, content_real = [], []
