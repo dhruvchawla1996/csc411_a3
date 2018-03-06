@@ -27,7 +27,7 @@ validation_label: list of 0 or 1
     0 = fake news | 1 = real news for corresponding i-th element in validation_set
 
 testing_label: list of 0 or 1
-    0 = fake news | 1 = real news for corresponding i-th element in training_set
+    0 = fake news | 1 = real news for corresponding i-th element in testing_set
 
 REQUIRES
 --------

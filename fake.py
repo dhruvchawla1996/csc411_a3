@@ -1,5 +1,6 @@
 # Imports
 from build_sets import *
+from naive_bayes import *
 
 ################################################################################
 # Part 1
@@ -10,8 +11,11 @@ def part1():
 ################################################################################
 # Part 2
 ################################################################################
-def part2():
-    pass
+#def part2():
+training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
+
+fake_word_freq_dict = NB_word_freq(True, training_set, training_label)
+real_word_freq_dict = NB_word_freq(False, training_set, training_label)
 
 ################################################################################
 # Part 3
