@@ -31,8 +31,6 @@ With values corresponding to their number of appearences in fake and real traini
 
 PARAMETERS
 ----------
-isFake: True or False
-    True = look for fake training examples | False = look for real training examples
 
 training_set: list of list of strings
     contains headlines broken into words
@@ -42,19 +40,19 @@ training_label: list of 0 or 1
 
 RETURNS
 -------
-word_freq_dict = {string, int}
+word_freq_dict = {string, (int, int)}
+    value[0] = appearances in fake news headlines | value[1] = appearances in real news headlines
 """
-def NB_word_freq(isFake, training_set, training_label):
+def NB_word_freq(training_set, training_label):
     word_freq_dict = {}
 
     for i in range(len(training_set)):
-        if     isFake and not training_label[i] == 0: continue
-        if not isFake and not training_label[i] == 1: continue
-
         for word in training_set[i]:
             if word not in word_freq_dict: 
-                word_freq_dict[word] = 1
+                if   training_label[i] == 0: word_freq_dict[word] = (1, 0)
+                elif training_label[i] == 1: word_freq_dict[word] = (0, 1)
             else:
-                word_freq_dict[word] += 1
+                if   training_label[i] == 0: word_freq_dict[word] = (word_freq_dict[word][0]+1, word_freq_dict[word][1]  )
+                elif training_label[i] == 1: word_freq_dict[word] = (word_freq_dict[word][0]  , word_freq_dict[word][1]+1)
 
     return word_freq_dict

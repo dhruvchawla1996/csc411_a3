@@ -14,8 +14,7 @@ def part1():
 #def part2():
 training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
 
-fake_word_freq_dict = NB_word_freq(True, training_set, training_label)
-real_word_freq_dict = NB_word_freq(False, training_set, training_label)
+word_freq_dict = NB_word_freq(training_set, training_label)
 
 ################################################################################
 # Part 3
