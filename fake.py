@@ -1,6 +1,7 @@
 # Imports
 from build_sets import *
 from naive_bayes import *
+from logistic_classifier import *
 
 ################################################################################
 # Part 1
@@ -43,8 +44,14 @@ def part3():
 ################################################################################
 # Part 4
 ################################################################################
-def part4():
-    pass
+#def part4():
+training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
+
+word_index_dict, total_unique_words = word_to_index_builder(training_set, validation_set, testing_set)
+
+training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np = convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words)
+
+train_LR_model(training_set_np, training_label_np, validation_set_np, validation_label_np, total_unique_words)
 
 ################################################################################
 # Part 5

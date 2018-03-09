@@ -1,5 +1,6 @@
 # Imports
 import random
+import numpy as np
 
 
 def build_sets():
@@ -83,3 +84,4 @@ def build_sets():
             testing_label.append(1)
 
     return training_set, validation_set, testing_set, training_label, validation_label, testing_label 
+
