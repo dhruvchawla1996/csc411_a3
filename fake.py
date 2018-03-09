@@ -1,4 +1,11 @@
 # Imports
+import torch
+import torch.nn as nn
+import torchvision.datasets as dsets
+import torchvision.transforms as transforms
+from torch.autograd import Variable
+import numpy as np
+
 from build_sets import *
 from naive_bayes import *
 from logistic_classifier import *
@@ -44,14 +51,20 @@ def part3():
 ################################################################################
 # Part 4
 ################################################################################
-#def part4():
-training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
+def part4():
+    training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
 
-word_index_dict, total_unique_words = word_to_index_builder(training_set, validation_set, testing_set)
+    word_index_dict, total_unique_words = word_to_index_builder(training_set, validation_set, testing_set)
 
-training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np = convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words)
+    training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np = convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words)
 
-train_LR_model(training_set_np, training_label_np, validation_set_np, validation_label_np, total_unique_words)
+    model = train_LR_model(training_set_np, training_label_np, validation_set_np, validation_label_np, total_unique_words)
+
+    # Test the model
+    x_test = Variable(torch.from_numpy(testing_set_np), requires_grad=False).type(torch.FloatTensor)
+    y_pred = model(x_test).data.numpy()
+    test_perf = (np.mean(np.argmax(y_pred, 1) == np.argmax(testing_label_np, 1))) * 100
+    print("Testing Set Performance   : " + str(test_perf)+ "%")
 
 ################################################################################
 # Part 5

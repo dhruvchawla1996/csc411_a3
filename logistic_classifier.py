@@ -20,13 +20,13 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
     # Hyper Parameters 
     input_size = total_unique_words
     num_classes = 2
-    num_epochs = 1000
-    learning_rate = 0.01
+    num_epochs = 800
+    learning_rate = 0.001
 
     model = LogisticRegression(input_size, num_classes)
 
     x = Variable(torch.from_numpy(training_set), requires_grad=False).type(torch.FloatTensor)
-    y_classes = Variable(torch.from_numpy(np.argmax(training_label, 1)), requires_grad=False).type(torch.FloatTensor)
+    y_classes = Variable(torch.from_numpy(np.argmax(training_label, 1)), requires_grad=False).type(torch.LongTensor)
 
     # Loss and Optimizer
     # Softmax is internally computed.
@@ -39,18 +39,18 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
         # Forward + Backward + Optimize
         optimizer.zero_grad()
         outputs = model(x)
-        loss = loss_fn(outputs, training_label)
+        loss = loss_fn(outputs, y_classes)
         loss.backward()
         optimizer.step()
         
-        if t % 50 == 0:
-            print("Epoch: " + str(t))
+        if epoch % 100 == 0:
+            print("Epoch: " + str(epoch))
 
             # Training Performance
             x_train = Variable(torch.from_numpy(training_set), requires_grad=False).type(torch.FloatTensor)
             y_pred = model(x_train).data.numpy()
             train_perf_i = (np.mean(np.argmax(y_pred, 1) == np.argmax(training_label, 1))) * 100
-            print("Training Set Performance: " + str(train_perf_i) + "%")      
+            print("Training Set Performance  : " + str(train_perf_i) + "%")      
 
             # Validation Performance  
             x_valid = Variable(torch.from_numpy(validation_set), requires_grad=False).type(torch.FloatTensor)
@@ -58,26 +58,12 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
             valid_perf_i = (np.mean(np.argmax(y_pred, 1) == np.argmax(validation_label, 1))) * 100
             print("Validation Set Performance:  " + str(valid_perf_i) + "%\n")
 
-
-
-# # Test the Model
-# correct = 0
-# total = 0
-# for images, labels in test_loader:
-#     images = Variable(images.view(-1, 28*28))
-#     outputs = model(images)
-#     _, predicted = torch.max(outputs.data, 1)
-#     total += labels.size(0)
-#     correct += (predicted == labels).sum()
-    
-# print('Accuracy of the model on the 10000 test images: %d %%' % (100 * correct / total))
-
-# # Save the Model
-# torch.save(model.state_dict(), 'model.pkl')
+    return model
 
 def convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words):
     training_set_np, validation_set_np, testing_set_np = np.zeros((0, total_unique_words)), np.zeros((0, total_unique_words)), np.zeros((0, total_unique_words))
 
+    # Training Set ############################################################
     for headline in training_set:
         training_set_i = np.zeros(total_unique_words)
 
@@ -91,6 +77,7 @@ def convert_sets_to_vector(training_set, validation_set, testing_set, training_l
     training_label_np_complement = 1 - training_label_np
     training_label_np = np.vstack((training_label_np, training_label_np_complement)).transpose()
 
+    # Validation Set ############################################################
     for headline in validation_set:
         validation_set_i = np.zeros(total_unique_words)
 
@@ -104,6 +91,7 @@ def convert_sets_to_vector(training_set, validation_set, testing_set, training_l
     validation_label_np_complement = 1 - validation_label_np
     validation_label_np = np.vstack((validation_label_np, validation_label_np_complement)).transpose()
 
+    # Testing Set ############################################################
     for headline in testing_set:
         testing_set_i = np.zeros(total_unique_words)
 
