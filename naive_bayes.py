@@ -56,7 +56,7 @@ def NB_classifier(word_freq_dict, training_set, training_label, words):
     P_real = 1. - P_fake
 
     P_word_fake, P_word_real = [], []
-
+    #playwith m =1 and p = 0.1
     for word, freq in word_freq_dict.iteritems():
         P_word_i_fake = (freq[0]+1*0.1)/float(count_fake+1)
         P_word_i_real = (freq[1]+1*0.1)/float(count_real+1)
