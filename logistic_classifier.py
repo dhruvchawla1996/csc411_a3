@@ -22,7 +22,7 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
     num_classes = 2
     num_epochs = 800
     learning_rate = 0.001
-    reg_lambda = 0.1
+    reg_lambda = 0.01
 
     model = LogisticRegression(input_size, num_classes)
 
@@ -41,7 +41,7 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
         optimizer.zero_grad()
         outputs = model(x)
         l2_reg = Variable(torch.FloatTensor(1), requires_grad=True)
-        for W in mdl.parameters():
+        for W in model.parameters():
             l2_reg = l2_reg + W.norm(2)
         loss = loss_fn(outputs, y_classes) + reg_lambda*l2_reg
         loss.backward()
