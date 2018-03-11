@@ -66,17 +66,45 @@ def part4():
     test_perf = (np.mean(np.argmax(y_pred, 1) == np.argmax(testing_label_np, 1))) * 100
     print("Testing Set Performance   : " + str(test_perf)+ "%")
 
+    # Save model weights
+    np.save("LR_model.npy", model.linear.weight.data.numpy())
+
 ################################################################################
 # Part 5
 ################################################################################
 def part5():
+    # Nothing to do here, check the report - fake.pdf
     pass
 
 ################################################################################
 # Part 6
 ################################################################################
 def part6():
-    pass
+    training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
+
+    word_index_dict, total_unique_words = word_to_index_builder(training_set, validation_set, testing_set)
+
+    # Load LR model weights from Part 4
+    model_weights = np.load("LR_model.npy")
+    model_weights = model_weights[0] - model_weights[1]
+
+    theta_max, theta_min = [], []
+
+    for i in range(10):
+        theta_max.append(np.argmax(model_weights))
+        theta_min.append(np.argmin(model_weights))
+        model_weights[theta_max[-1]] = 0
+        model_weights[theta_min[-1]] = 0
+
+    for theta in theta_max:
+        word = [word for word, index in word_index_dict.items() if index == theta][0]
+        print(word)
+
+    print("\n")
+
+    for theta in theta_min:
+        word = [word for word, index in word_index_dict.items() if index == theta][0]
+        print(word)
 
 ################################################################################
 # Part 7
