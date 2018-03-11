@@ -5,6 +5,7 @@ import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 from torch.autograd import Variable
 import numpy as np
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from build_sets import *
 from naive_bayes import *
@@ -90,21 +91,47 @@ def part6():
 
     theta_max, theta_min = [], []
 
-    for i in range(10):
+    for i in range(50):
         theta_max.append(np.argmax(model_weights))
         theta_min.append(np.argmin(model_weights))
         model_weights[theta_max[-1]] = 0
         model_weights[theta_min[-1]] = 0
 
+    count = 0
     for theta in theta_max:
+        if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
         print(word)
+        count += 1
 
     print("\n")
 
+    count = 0
     for theta in theta_min:
+        if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
         print(word)
+        count += 1
+
+    print("\n")
+
+    count = 0
+    for theta in theta_max:
+        if count >= 10: break
+        word = [word for word, index in word_index_dict.items() if index == theta][0]
+        if word in ENGLISH_STOP_WORDS: continue
+        print(word)
+        count += 1
+
+    print("\n")
+
+    count = 0
+    for theta in theta_min:
+        if count >= 10: break
+        word = [word for word, index in word_index_dict.items() if index == theta][0]
+        if word in ENGLISH_STOP_WORDS: continue
+        print(word)
+        count += 1
 
 ################################################################################
 # Part 7
