@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 import numpy as np
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from sklearn import tree
 
 from build_sets import *
 from naive_bayes import *
@@ -140,8 +141,17 @@ def part6():
 ################################################################################
 # Part 7
 ################################################################################
-def part7():
-    pass
+#def part7():
+training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
+
+word_index_dict, total_unique_words = word_to_index_builder(training_set, validation_set, testing_set)
+
+training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np = convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words)
+
+clf = tree.DecisionTreeClassifier()
+clf = clf.fit(training_set_np, training_label)
+
+print(clf.score(training_set_np, training_label))
 
 ################################################################################
 # Part 8
