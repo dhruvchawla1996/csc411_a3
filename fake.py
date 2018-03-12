@@ -159,6 +159,13 @@ for d in max_depth_val:
     print("Validation Set Accuracy: " + str(100*clf.score(validation_set_np, validation_label)))
     print("\n")
 
+# Best performance comes at max_depth=150
+clf = tree.DecisionTreeClassifier(max_depth=150)
+clf = clf.fit(training_set_np, training_label)
+
+# Visualize first two layers of decision tree
+dot_data = tree.export_graphviz(clf, out_file="figures/decision_tree.dot", max_depth=2) 
+
 ################################################################################
 # Part 8
 ################################################################################
