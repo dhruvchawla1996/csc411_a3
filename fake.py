@@ -148,10 +148,16 @@ word_index_dict, total_unique_words = word_to_index_builder(training_set, valida
 
 training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np = convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words)
 
-clf = tree.DecisionTreeClassifier()
-clf = clf.fit(training_set_np, training_label)
+max_depth_val = [2, 5, 10, 20, 50, 75, 100, 150, 200, 500]
 
-print(clf.score(training_set_np, training_label))
+for d in max_depth_val:
+    clf = tree.DecisionTreeClassifier(max_depth=d)
+    clf = clf.fit(training_set_np, training_label)
+
+    print("Depth: " + str(d))
+    print("Training Set Accuracy  : " + str(100*clf.score(training_set_np, training_label)))
+    print("Validation Set Accuracy: " + str(100*clf.score(validation_set_np, validation_label)))
+    print("\n")
 
 ################################################################################
 # Part 8
