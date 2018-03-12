@@ -97,40 +97,44 @@ def part6():
         model_weights[theta_max[-1]] = 0
         model_weights[theta_min[-1]] = 0
 
+    print("Top 10 positive thetas (including stop-words): ")
     count = 0
     for theta in theta_max:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
     print("\n")
 
+    print("Top 10 negative thetas (including stop-words): ")
     count = 0
     for theta in theta_min:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
     print("\n")
 
+    print("Top 10 positive thetas (excluding stop-words): ")
     count = 0
     for theta in theta_max:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
         if word in ENGLISH_STOP_WORDS: continue
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
     print("\n")
 
+    print("Top 10 negative thetas (excluding stop-words): ")
     count = 0
     for theta in theta_min:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
         if word in ENGLISH_STOP_WORDS: continue
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
 ################################################################################

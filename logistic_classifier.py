@@ -17,6 +17,30 @@ class LogisticRegression(nn.Module):
         return out
 
 def train_LR_model(training_set, training_label, validation_set, validation_label, total_unique_words):
+    """
+    Trains Logistic Regression Numpy model
+
+    PARAMETERS
+    ----------
+    training_set, validation_set: numpy arrays [num_examples, total_unique_words]
+        For each headline in a set:
+        v[k] = 1 if kth word appears in the headline else 0
+
+    training_label, validation_label: numpy arrays [num_examples, [0, 1] or [1, 0]]
+        [0, 1] if headline is fake else [1, 0]
+
+    total_unique_words: int
+        total number of unique words in training_set, validation_set, testing_set
+
+    RETURNS
+    -------
+    model: LogisticRegression instance
+        fully trained Logistic Regression model
+
+    REQUIRES
+    --------
+    LogisticRegression: PyTorch class defined
+    """
     # Hyper Parameters 
     input_size = total_unique_words
     num_classes = 2
@@ -65,6 +89,37 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
     return model
 
 def convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words):
+    """
+    Convert training, validation and testing sets and labels from lists to numpy vectors 
+
+    For each headline in a set:
+    v[k] = 1 if kth word appears in the headline else 0
+
+    For each label:
+    [0, 1] if headline is fake else [1, 0]
+
+    PARAMETERS
+    ----------
+    training_set, validation_set, testing_set: list of list of strings
+        contains headlines broken into words
+
+    training_label, validation_label, testing_label: list of 0 or 1
+        0 = fake news | 1 = real news for corresponding i-th element in training_set
+
+    word_index_dict: {string, int}
+        Matches word in training_set, validation_set, testing_set to a unique count number
+
+    total_unique_words: int
+        total number of unique words in training_set, validation_set, testing_set
+
+    RETURNS
+    -------
+    training_set_np, validation_set_np, testing_set_np: 
+        numpy arrays representing conversions of training_set, validation_set, testing_set respectively
+
+    training_label_np, validation_label_np, testing_label_np:
+        numpy arrays representing conversions of training_label, validation_label, testing_label respectively
+    """
     training_set_np, validation_set_np, testing_set_np = np.zeros((0, total_unique_words)), np.zeros((0, total_unique_words)), np.zeros((0, total_unique_words))
 
     # Training Set ############################################################
@@ -112,6 +167,28 @@ def convert_sets_to_vector(training_set, validation_set, testing_set, training_l
     return training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np
 
 def word_to_index_builder(training_set, validation_set, testing_set):
+    """
+    Build a mapping of word -> unique number
+
+    PARAMETERS
+    ----------
+    training_set: list of list of strings
+        contains headlines broken into words
+
+    validation_set: list of list of strings
+        contains headlines broken into words
+
+    testing_set: list of list of strings
+        contains headlines broken into words
+
+    RETURNS
+    -------
+    word_dict: {string, int}
+        Matches word in training_set, validation_set, testing_set to a unique count number
+
+    total_unique_words: int
+        total number of unique words in training_set, validation_set, testing_set
+    """
     word_dict = {}
     i = 0
 
