@@ -164,7 +164,7 @@ clf = tree.DecisionTreeClassifier(max_depth=150)
 clf = clf.fit(training_set_np, training_label)
 
 # Visualize first two layers of decision tree
-dot_data = tree.export_graphviz(clf, out_file="figures/decision_tree.dot", max_depth=2) 
+dot_data = tree.export_graphviz(clf, out_file="figures/decision_tree.dot", max_depth=2, filled=True, rounded=True, class_names=['fake', 'real'])
 
 ################################################################################
 # Part 8
