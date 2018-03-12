@@ -6,6 +6,7 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 import numpy as np
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
+from sklearn import tree
 
 from build_sets import *
 from naive_bayes import *
@@ -144,47 +145,78 @@ def part6():
         model_weights[theta_max[-1]] = 0
         model_weights[theta_min[-1]] = 0
 
+    print("Top 10 positive thetas (including stop-words): ")
     count = 0
     for theta in theta_max:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
     print("\n")
 
+    print("Top 10 negative thetas (including stop-words): ")
     count = 0
     for theta in theta_min:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
     print("\n")
 
+    print("Top 10 positive thetas (excluding stop-words): ")
     count = 0
     for theta in theta_max:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
         if word in ENGLISH_STOP_WORDS: continue
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
     print("\n")
 
+    print("Top 10 negative thetas (excluding stop-words): ")
     count = 0
     for theta in theta_min:
         if count >= 10: break
         word = [word for word, index in word_index_dict.items() if index == theta][0]
         if word in ENGLISH_STOP_WORDS: continue
-        print(word)
+        print(str(i+1)+ ": " + word)
         count += 1
 
 ################################################################################
 # Part 7
 ################################################################################
-def part7():
-    pass
+#def part7():
+training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
+
+word_index_dict, total_unique_words = word_to_index_builder(training_set, validation_set, testing_set)
+
+training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np = convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words)
+
+max_depth_val = [2, 5, 10, 20, 50, 75, 100, 150, 200, 500]
+
+for d in max_depth_val:
+    clf = tree.DecisionTreeClassifier(max_depth=d)
+    clf = clf.fit(training_set_np, training_label)
+
+    print("Depth: " + str(d))
+    print("Training Set Accuracy  : " + str(100*clf.score(training_set_np, training_label)))
+    print("Validation Set Accuracy: " + str(100*clf.score(validation_set_np, validation_label)))
+    print("\n")
+
+index_word_dict = {index: word for word, index in word_index_dict.iteritems()}
+word_list = []
+for i in range(total_unique_words):
+    word_list.append(index_word_dict[i])
+
+# Best performance comes at max_depth=150
+clf = tree.DecisionTreeClassifier(max_depth=150)
+clf = clf.fit(training_set_np, training_label)
+
+# Visualize first two layers of decision tree
+dot_data = tree.export_graphviz(clf, out_file="figures/decision_tree.dot", max_depth=2, filled=True, rounded=True, class_names=['fake', 'real'], feature_names=word_list)
 
 ################################################################################
 # Part 8
