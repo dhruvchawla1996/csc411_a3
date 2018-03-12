@@ -159,12 +159,17 @@ for d in max_depth_val:
     print("Validation Set Accuracy: " + str(100*clf.score(validation_set_np, validation_label)))
     print("\n")
 
+index_word_dict = {index: word for word, index in word_index_dict.iteritems()}
+word_list = []
+for i in range(total_unique_words):
+    word_list.append(index_word_dict[i])
+
 # Best performance comes at max_depth=150
 clf = tree.DecisionTreeClassifier(max_depth=150)
 clf = clf.fit(training_set_np, training_label)
 
 # Visualize first two layers of decision tree
-dot_data = tree.export_graphviz(clf, out_file="figures/decision_tree.dot", max_depth=2, filled=True, rounded=True, class_names=['fake', 'real'])
+dot_data = tree.export_graphviz(clf, out_file="figures/decision_tree.dot", max_depth=2, filled=True, rounded=True, class_names=['fake', 'real'], feature_names=word_list)
 
 ################################################################################
 # Part 8
