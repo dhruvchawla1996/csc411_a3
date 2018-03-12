@@ -11,6 +11,7 @@ from build_sets import *
 from naive_bayes import *
 from logistic_classifier import *
 
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 ################################################################################
 # Part 1
 ################################################################################
@@ -47,7 +48,53 @@ def part2():
 # Part 3
 ################################################################################
 def part3():
-    pass
+    training_set, validation_set, testing_set, training_label, validation_label, testing_label = build_sets()
+    word_freq_dict = NB_word_freq(training_set, training_label)
+
+    #note: all_words are unique
+    words = np.array([])
+    P_fake_given_word = np.array([])
+    P_fake_given_not_word = np.array([])
+    P_real_given_word = np.array([])
+    P_real_given_not_word = np.array([])
+
+    #get P(fake | word) for all words
+    for word in word_freq_dict.keys():
+        words = np.append(words, word)
+        P_fake_given_word = np.append(P_fake_given_word, NB_probabilities(word_freq_dict, training_set, training_label, [word]))
+
+    #TODO: can make this faster by initializing shapes of P_fake_given_not_word, P_real_given_word, P_real_given_not_word as words.shape
+    #compute P(fake | ~word) for all words
+    for word in words:
+        P_fake_given_not_word = np.append(P_fake_given_not_word, np.sum(P_fake_given_word) - P_fake_given_word[np.where(words == word)])
+
+    #compute P(real | word) for all words
+    P_real_given_word = 1 - P_fake_given_word
+
+    #compute P(real | ~word) for all words
+    for word in words:
+        P_real_given_not_word = np.append(P_real_given_not_word, np.sum(P_real_given_word) - P_real_given_word[np.where(words == word)])
+
+    # print(words.shape, P_fake_given_word.shape, P_fake_given_not_word.shape, P_real_given_word.shape, P_real_given_not_word.shape)
+
+    #create maps from words to the four probabilities
+    fake_under_presence = np.vstack((words, P_fake_given_word)).T
+    fake_under_absence = np.vstack((words, P_fake_given_not_word)).T
+    real_under_presence = np.vstack((words, P_real_given_word)).T
+    real_under_absence = np.vstack((words, P_real_given_not_word)).T
+
+    # print(fake_under_presence.shape, fake_under_absence.shape, real_under_presence.shape, real_under_absence.shape)
+
+    # #sort by 2nd column
+    fake_under_presence = fake_under_presence[fake_under_presence[:, 1].argsort()]
+    fake_under_absence = fake_under_absence[fake_under_absence[:,1].argsort()]
+    real_under_presence = real_under_presence[real_under_presence[:,1].argsort()]
+    real_under_absence = real_under_absence[real_under_absence[:,1].argsort()]
+
+    np.savetxt("fake_under_presence.txt", fake_under_presence[:10, :], fmt = '%s')
+    np.savetxt("fake_under_absence.txt", fake_under_absence[:10, :], fmt = "%s")
+    np.savetxt("real_under_presence.txt", real_under_presence[:10, :], fmt="%s")
+    np.savetxt("real_under_absence.txt", real_under_absence[:10, :], fmt="%s")
 
 ################################################################################
 # Part 4
@@ -144,3 +191,7 @@ def part7():
 ################################################################################
 def part8():
     pass
+
+
+###################### MAIN #############################
+part3()
