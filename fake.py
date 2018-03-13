@@ -48,7 +48,7 @@ def part2():
 ################################################################################
 # Part 3
 ################################################################################
-def part3():
+def part3a():
     training_set, validation_set, testing_set, training_label, validation_label, testing_label = build_sets()
     word_freq_dict = NB_word_freq(training_set, training_label)
 
@@ -97,6 +97,19 @@ def part3():
     np.savetxt("real_under_presence.txt", real_under_presence[:10, :], fmt="%s")
     np.savetxt("real_under_absence.txt", real_under_absence[:10, :], fmt="%s")
 
+def part3b():
+    training_set, validation_set, testing_set, training_label, validation_label, testing_label = build_sets()
+    word_freq_dict = NB_word_freq(training_set, training_label)
+
+    #TODO: modify
+    for word in ENGLISH_STOP_WORDS:
+        if word in word_freq_dict: del word_freq_dict[word]
+
+    #TODO: repeat part 3a
+
+    return
+
+
 ################################################################################
 # Part 4
 ################################################################################
@@ -117,6 +130,7 @@ def part4():
 
     # Save model weights
     np.save("LR_model.npy", model.linear.weight.data.numpy())
+
 
 ################################################################################
 # Part 5
@@ -226,4 +240,4 @@ def part8():
 
 
 ###################### MAIN #############################
-part3()
+part3a()
