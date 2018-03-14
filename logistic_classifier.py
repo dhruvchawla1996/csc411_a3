@@ -15,7 +15,7 @@ class LogisticRegression(nn.Module):
     def forward(self, x):
         out = self.linear(x)
         return out
-
+#TODO: understand pytorch
 def train_LR_model(training_set, training_label, validation_set, validation_label, total_unique_words):
     """
     Trains Logistic Regression Numpy model
