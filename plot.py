@@ -13,6 +13,8 @@ from numpy import random
 
 import os
 
+plt.switch_backend('agg')
+
 def plot_learning_curves(part, epoch, train_perf, valid_perf):
     '''Plot learning curves for training and testing set w.r.t epoch
     
