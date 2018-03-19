@@ -6,6 +6,8 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 import numpy as np
 
+from plot import *
+
 # Model
 class LogisticRegression(nn.Module):
     def __init__(self, input_size, num_classes):
@@ -59,6 +61,8 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
     loss_fn = nn.CrossEntropyLoss()  
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
+    epoch_list, train_perf, valid_perf = [], [], []
+
     # Training the Model
     for epoch in range(num_epochs+1):
         # Forward + Backward + Optimize
@@ -86,6 +90,13 @@ def train_LR_model(training_set, training_label, validation_set, validation_labe
             valid_perf_i = (np.mean(np.argmax(y_pred, 1) == np.argmax(validation_label, 1))) * 100
             print("Validation Set Performance:  " + str(valid_perf_i) + "%\n")
 
+            epoch_list.append(epoch)
+            train_perf.append(train_perf_i)
+            valid_perf.append(valid_perf_i)
+
+    # Plot learning curves
+    plot_learning_curves("part4", epoch_list, train_perf, valid_perf)
+    
     return model
 
 def convert_sets_to_vector(training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict, total_unique_words):
