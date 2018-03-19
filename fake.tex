@@ -368,6 +368,13 @@ The final results were as follows:
 
 The learning curves are shown in Figure 1.\\
 
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[scale=1]{figures/part4_learning_curve.png}
+    \caption{Logistic Regression Learning Curve}
+    \label{fig:fig1}
+\end{figure*}
+
 For regularization parameters, both $L1$ and $L2$ regularization were tried. $L2$ regularization performed $10\%$ better. The $\lambda$ values for $L2$ regularization was varied for values $0.001,0.001,0.05,0.01,0.1,0.5$. Out of these, $0.01$ performed the best.\\
 
 \end{homeworkProblem}
@@ -378,6 +385,21 @@ For regularization parameters, both $L1$ and $L2$ regularization were tried. $L2
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}
+
+\textit{Naive Bayes vs Logistic Regression}\\
+
+\begin{align*}
+\theta_0 + \theta_1 I_1(x) + \theta_2 I_2(x) + \hdots + \theta_k I_k(x) > thr
+\end{align*}
+
+$k$ is the total number of unique words that appear in all headlines.\\
+$I_i(x)$ is equal to 1 if $x_i$ is present in the headline under consideration, 0 otherwise.\\
+
+\textbf{Naive Bayes}\\
+$\theta_i$ is equal to $log \frac {P(x_i = 1 | y = fake)} {P(x_i = 1 | y = real)} - log \frac {P(x_i = 0 | y = fake)} {P(x_i = 0 | y = real)}$\\
+
+\textbf{Logistic Regression}\\
+$\theta_i$ is equal to $max(log \frac {P(x_i = 1 | y = fake)} {P(x_i = 1 | y = real)}, log \frac {P(x_i = 0 | y = fake)} {P(x_i = 0 | y = real)})$\\
 
 \end{homeworkProblem}
 \clearpage
@@ -459,6 +481,94 @@ Using magnitude of the logistic regression parameters to indicate importance of 
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}
+
+\textit{Decision Trees}\\
+
+\textbf{Part 7(a)}\\
+
+The relationship between between maximum depth of the tree and the training/validation accuracy can be seen below:\\
+
+\begin{verbatim}
+Depth: 2
+Training Set Accuracy  : 70.6165282029
+Validation Set Accuracy: 69.1836734694
+
+
+Depth: 5
+Training Set Accuracy  : 73.2837778749
+Validation Set Accuracy: 67.5510204082
+
+
+Depth: 10
+Training Set Accuracy  : 78.1810231745
+Validation Set Accuracy: 69.7959183673
+
+
+Depth: 20
+Training Set Accuracy  : 85.5268911237
+Validation Set Accuracy: 71.4285714286
+
+
+Depth: 50
+Training Set Accuracy  : 95.2339309139
+Validation Set Accuracy: 73.4693877551
+
+
+Depth: 75
+Training Set Accuracy  : 97.9011805859
+Validation Set Accuracy: 73.8775510204
+
+
+Depth: 100
+Training Set Accuracy  : 99.0380411019
+Validation Set Accuracy: 73.8775510204
+
+
+Depth: 150
+Training Set Accuracy  : 100.0
+Validation Set Accuracy: 73.8775510204
+
+
+Depth: 200
+Training Set Accuracy  : 100.0
+Validation Set Accuracy: 72.6530612245
+
+
+Depth: 500
+Training Set Accuracy  : 100.0
+Validation Set Accuracy: 73.2653061224
+\end{verbatim}
+
+As can be seen, with increasing depth, the performance increases at first, and then overfits.\\
+
+The final testing accuracy (on $max\_depth = 150$ comes out to be $75.66\%$).\\
+
+This can be reproduced by running \texttt{part7()} in \texttt{fake.py}.\\
+
+\textbf{Part 7(b)}\\
+
+The first two layers of the tree are visualized here:\\
+
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[scale=0.5]{figures/decision_tree.png}
+    \caption{First two layers of the decision tree}
+    \label{fig:fig2}
+\end{figure*}
+
+\textbf{Part 7(c)}\\
+
+\begin{center}
+    \begin{tabular}{| l | l | l | l |}
+        \hline
+        Method & Training Set Accuracy & Validation Set Accuracy & Testing Set Accuracy \\ \hline
+        Naive Bayes & $97.28\%$ & $83.46\%$ & $85.68\%$ \\ \hline
+        Logistic Regression & $98.46\%$ & $82.04\%$ & $84.86\%$ \\ \hline
+        Decision Tree & $100.0\%$ & $73.87\%$ & $75.66\%$ \\ \hline
+    \end{tabular}
+\end{center}
+
+The performance of the three classifiers is summarized in the table above. As can be seen, Naive Bayes and Logistic Regression had similar performances, while Decision Trees had the most overfitting.\\
 
 \end{homeworkProblem}
 \clearpage
