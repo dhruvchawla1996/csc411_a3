@@ -469,9 +469,17 @@ Top 10 negative thetas (excluding stop-words):
 10: won
 \end{verbatim}
 
+\texttt{Part 6(a)} does contain similar words to \texttt{Part 3(a)}. Words like \texttt{australia, business, asia} appear in \texttt{real\_under\_absence.txt} while words like \texttt{breaking, d} appear in \texttt{real\_under\_presence.txt}\\
+
+The exlcusion of stopwords in both lists in Parts $6$ and $3$ have no effect on the top $10$ lists.\\
+
 \textbf{Part 6(c)}\\
 
-Using magnitude of the logistic regression parameters to indicate importance of a feature can be a bad idea in general if features are not normalized. 
+Using magnitude of the logistic regression parameters to indicate importance of a feature can be a bad idea in general if features are not normalized.\\
+
+Example: for a predictor of the selling price there are two factors: land area and width of the plot. Now, generally the land area is bigger in pure magnitude compared to the width of the plot, so unless the features are normalized, land area will influence the classifier more than the plot width.\\
+
+However, it is reasonable to use logistic regression in this problem because each feature is either 0 or 1 so no one feature carries more importance than the rest. It's akin to the features already being normalized.\\
 
 \end{homeworkProblem}
 \clearpage
@@ -545,6 +553,8 @@ The final testing accuracy (on $max\_depth = 150$ comes out to be $75.66\%$).\\
 
 This can be reproduced by running \texttt{part7()} in \texttt{fake.py}.\\
 
+In addition, we did not use any other parameters for which we are using non-default values, although non-default parameters were experimented with for \texttt{criterion, splitter,} and \texttt{max\_features} and their performance measured on the validation set.\\
+
 \textbf{Part 7(b)}\\
 
 The first two layers of the tree are visualized here:\\
@@ -555,6 +565,10 @@ The first two layers of the tree are visualized here:\\
     \caption{First two layers of the decision tree}
     \label{fig:fig2}
 \end{figure*}
+
+This can be reproduced by running \texttt{part7()} in \texttt{fake.py}.\\
+
+The only important feature common between the first two levels of the decision tree visualization and Parts $3$ and $6$ seems to be the word \texttt{trumps}. The lack of common words may be attributed to the fact that NB and Logistic Regression are classifying words important to classifying headlines as real or fake whereas the decision tree is objectified towards identifying a split with highest information split on either side of tree which may not directly correspond to the word as being indicative of one class or the other.\\
 
 \textbf{Part 7(c)}\\
 
