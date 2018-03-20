@@ -128,7 +128,6 @@ def NB_probabilities(word_freq_dict, training_set, training_label, words):
     #P_real_words = 1 - P_fake_words
     return P_fake_words
 
-
 def NB_word_freq(training_set, training_label):
     """
     Build a dictionary of words in fake and real training set examples

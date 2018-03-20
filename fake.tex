@@ -262,6 +262,62 @@ The final results were as follows:
 
 \textit{Naive Bayes Algorithm: Indicative Words}\\
 
+\textbf{Part 3(a)}
+
+The keywords ranked according to the four different probabilities are listed in the table below.
+\begin{center}
+\begin{tabular}{ | l | l | l | l | }
+	\hline
+	$P(fake | \neg word)$  & $P(fake | word)$ & $P(real | \neg word)$ & $P(real | word)$ \\ \hline
+	richardson  & powell  & pardon  & breaking  \\ \hline
+	snaps  & strong & megyn  & soros  \\ \hline
+	annouces & tough & buses  & 3 \\ \hline
+	divides & phoenix & africa  & woman  \\ \hline
+	cuba  & industry & editors  & steal  \\ \hline
+	speaks  & rules & armed  & u  \\ \hline
+	apprentice & care  & responsabilidad  & here  \\ \hline
+	fourth  & duterte  & gutless  & m  \\ \hline
+	misleading & covfefe  & khan  & reporter  \\ \hline
+	magazine  & shorten  & revelation & homeless  \\ \hline
+\end{tabular}
+\label{tab: List of top 10 indicative words}
+\end{center}
+
+The probabilities were calculated as follows: 
+
+\begin{equation*}
+	P(class) = \frac{\text{\# of headlines of that class}}{\text{total \# of headlines}}
+\end{equation*}
+
+\begin{equation*}
+	P(word | class) = \frac{\text{ \# of occurrences of word in headlines of that class}}{\text{total number of headlines of that class}}
+\end{equation*}
+
+\begin{equation*}
+P(class | word) = \frac{P(word | class) * P(class)} { ( P(word|fake) * P(fake) + P(word|real) *P(real) }
+\end{equation*}
+
+\begin{align*}
+	P(class | \neg word) = \frac{P(\neg word | class)P(class)}{P(\neg word)}
+\end{align*}
+
+\begin{equation*}
+	P(\neg word | class) = 1 - P(word | class)
+\end{equation*}
+\begin{equation*}
+	P(\neg word) = \frac{\text{headlines without word}}{\# \text{headlines}}
+\end{equation*}
+
+The values of $P(class|word)$ are generally much larger than those of $P(class| \neg words)$. Thus, the presence of words seem like stronger predictors of whether a headline is real or fake than absence. 
+
+\textbf{Part 3(b)} \\
+ 
+Since the top ten words listed do not contain any stop-words, the list remains unchanged upon removing stop words.  \\
+
+\textbf{Part 3(c)} \\
+ 
+Stop words are not helpful when headlines are being assessed for their content, but are important for context. For example,  the phase "trump can't think" and the phrase "trump can think" reduce to "trump think" if we remove the stop words, (cant, can). The reduced phrase tell us what the sentence is about but do not convey the original message of each sentence. 
+
 \end{homeworkProblem}
 \clearpage
 
@@ -592,8 +648,73 @@ The performance of the three classifiers is summarized in the table above. As ca
 %----------------------------------------------------------------------------------------
 
 \begin{homeworkProblem}
+	
+\textbf{Part 8(a)}\\
+Mutual information is defined as the amount of information we learn about the value B knowing the value of A. It is given by 
+$$I(A;B) = H(B) - H(B|A) = H(B) - H(A|B)$$
+where
+\begin{align*}
+H(B|A) &= \sum_a P(A=a)H(B|A=a) \\
+	   &= \sum_a P(A=a) [-\sum_bP(B=b|A=a)\log_2P(B=b|A=a) ]
+\end{align*}
+
+In our case, A = Y = $ \{real, fake \} $ and $B = X = \{ x_i="the" \} $.
+$$H(Y) = -P(real) \log_2P(real) - P(fake) \log_2P(fake)$$
+
+%also multiply by P(the) and P(not the)
+%include results from Part 3
+
+\begin{align*}H(Y|"the") &= P(real) [ -P(real|"the") \log_2P(real|"the") -P(real| \neg "the") \log_2P(real| \neg"the")]\\
+			 &\hspace{0.3cm} + P(fake)[-P(fake|"the") \log_2 P(fake|"the") -P(fake|\neg "the") \log_2 P(fake| \neg "the")] 
+\end{align*}
+
+
+\begin{align*}
+	I(Y;X) &= H(Y) - H(Y|X)  \\
+		   &= H(Y) -  P(X="the")H(Y|X="the")
+\end{align*}
+
+From part3, P(real) = 0.6025, P(fake) = 0.3975, $P(real|"the")$ = 0.9901, $P(fake|"the")$ = 0.0099, $P(real|\neg "the") = 0.0933 $ , $P(fake|\neg"the") = 0.3364$ \\
+
+\begin{align*}
+	H(Y) &= - 0.6025 \log_2(0.6025) - 0.3975 \log_2(0.3975) \\ 
+		 &= 0.9695
+\end{align*}
+\begin{align*} 
+H(Y|"the") &= 0.6025[- 0.9901 \log_2(0.9901) - 0.0933 \log_2(0.0933) ]  \\
+		   &\hspace{0.3cm} + 0.3975 [- 0.0099 \log_2(0.0099) - 0.3364 \log_2(0.3364) ] \\
+		   &= 0.4373
+\end{align*}
+Thus, 
+\begin{align*}
+	I(Y;X) &= 0.9695 - 0.4373 \\
+		   &= 0.5322
+\end{align*}
 
 \end{homeworkProblem}
+
+\textbf{Part 8(b)}\\
+Let $x_j$ = "hillary". From previous parts, $P(real|"hillary")$ = 0.9793, $P(real | \neg "hillary")$ = 0.0154, $P(fake|"hillary")$ = 0.02074, $P(fake| \neg "hillary")$ = 0.1344.  \\
+
+\begin{align*}
+H(Y) &= - 0.6025 \log_2(0.6025) - 0.3975 \log_2(0.3975) \\ 
+&= 0.9695
+\end{align*}
+
+\begin{align*} 
+H(Y|"hillary") &= 0.6025[ - 0.9793 \log_2(0.9793) - 0.0154 \log_2(0.01548) ]  \\
+&\hspace{0.3cm} + 0.3975 [- 0.02074 \log_2(0.02074) - 0.1344 \log_2(0.1344) ] \\
+&= 0.2744
+\end{align*}
+
+Thus,
+\begin{align*}
+I(Y;X) &= 0.9695 - 0.2744 \\
+&= 0.6951
+\end{align*}
+
+The value obtained for $I(Y|x)$ in part 8(b) is larger than that obtained in part 8(a)
+
 \clearpage
 
 %----------------------------------------------------------------------------------------

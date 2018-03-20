@@ -58,31 +58,51 @@ def part3a():
     P_fake_given_not_word = np.array([])
     P_real_given_word = np.array([])
     P_real_given_not_word = np.array([])
+    P_word_given_fake = np.array([])
+    P_word_given_real =np.array([])
+    P_not_word_given_real = np.array([])
+    P_not_word_given_fake = np.array([])
+    P_word = np.array([])
+    P_not_word = np.array([])
 
-    #get P(fake | word) for all words
+    count_fake = 0
+    for label in training_label:
+        if label == 0: count_fake = count_fake + 1
+
+    count_real = len(training_label) - count_fake
+
+    for word, freq in word_freq_dict.iteritems():
+        P_word_given_fake = np.append(P_word_given_fake , float((freq[0])) / float(count_fake))
+        P_word_given_real = np.append(P_word_given_real , float((freq[1])) / float(count_real))
+        P_word = np.append(P_word, float((freq[0] + freq[1]))/ len(training_label))
+
+    P_not_word_given_fake = 1 - P_word_given_fake
+    P_not_word_given_real = 1 - P_word_given_real
+    P_not_word = 1 - P_word #
+
+    ####### compute P( class | ~word) for all words #######
+    #P(real | ~word) = (P_~word_| class * P(class) ) / P(~ word)
+
+    P_real_given_not_word = ( P_word_given_real / P_not_word )
+    P_fake_given_not_word = ( P_word_given_fake / P_not_word )
+
+    ####### get P(class | word) for all words #######
     for word in word_freq_dict.keys():
         words = np.append(words, word)
-        P_fake_given_word = np.append(P_fake_given_word, NB_probabilities(word_freq_dict, training_set, training_label, [word]))
+        P_fake_given_word = np.append(P_fake_given_word,
+                                      NB_probabilities(word_freq_dict, training_set, training_label, [word]))
 
-    #TODO: can make this faster by initializing shapes of P_fake_given_not_word, P_real_given_word, P_real_given_not_word as words.shape
-    #compute P(fake | ~word) for all words
-    for word in words:
-        P_fake_given_not_word = np.append(P_fake_given_not_word, np.sum(P_fake_given_word) - P_fake_given_word[np.where(words == word)])
-
-    #compute P(real | word) for all words
     P_real_given_word = 1 - P_fake_given_word
 
-    #compute P(real | ~word) for all words
-    for word in words:
-        P_real_given_not_word = np.append(P_real_given_not_word, np.sum(P_real_given_word) - P_real_given_word[np.where(words == word)])
-
-    # print(words.shape, P_fake_given_word.shape, P_fake_given_not_word.shape, P_real_given_word.shape, P_real_given_not_word.shape)
+    #print(words.shape, P_word_given_fake.shape, P_word_given_real.shape, P_fake_given_word.shape,
+          P_real_given_word.shape, P_word.shape, P_not_word.shape, P_real_given_not_word.shape, P_fake_given_not_word.shape)
 
     #create maps from words to the four probabilities
     fake_under_presence = np.vstack((words, P_fake_given_word)).T
     fake_under_absence = np.vstack((words, P_fake_given_not_word)).T
     real_under_presence = np.vstack((words, P_real_given_word)).T
     real_under_absence = np.vstack((words, P_real_given_not_word)).T
+
 
     # print(fake_under_presence.shape, fake_under_absence.shape, real_under_presence.shape, real_under_absence.shape)
 
@@ -92,10 +112,13 @@ def part3a():
     real_under_presence = real_under_presence[real_under_presence[:,1].argsort()]
     real_under_absence = real_under_absence[real_under_absence[:,1].argsort()]
 
-    np.savetxt("fake_under_presence.txt", fake_under_presence[:10, :], fmt = '%s')
-    np.savetxt("fake_under_absence.txt", fake_under_absence[:10, :], fmt = "%s")
-    np.savetxt("real_under_presence.txt", real_under_presence[:10, :], fmt="%s")
-    np.savetxt("real_under_absence.txt", real_under_absence[:10, :], fmt="%s")
+    np.savetxt("fake_under_presence.txt", fake_under_presence, fmt = '%s')
+    np.savetxt("fake_under_absence.txt", fake_under_absence, fmt = "%s")
+    np.savetxt("real_under_presence.txt", real_under_presence, fmt="%s")
+    np.savetxt("real_under_absence.txt", real_under_absence, fmt="%s")
+
+
+
 
 def part3b():
     training_set, validation_set, testing_set, training_label, validation_label, testing_label = build_sets()
@@ -228,6 +251,7 @@ def part7():
     # Best performance comes at max_depth=150
     clf = tree.DecisionTreeClassifier(max_depth=150)
     clf = clf.fit(training_set_np, training_label)
+    #TODO: experiment with other non-default parameters
 
     # Visualize first two layers of decision tree
     dot_data = tree.export_graphviz(clf, out_file="figures/decision_tree.dot", max_depth=2, filled=True, rounded=True, class_names=['fake', 'real'], feature_names=word_list)
@@ -236,8 +260,31 @@ def part7():
 # Part 8
 ################################################################################
 def part8():
-    pass
+    training_set, validation_set, testing_set, training_label, validation_label, testing_label  = build_sets()
 
+    word_index_dict, total_unique_words = word_to_index_builder(training_set, validation_set, testing_set)
+
+    training_set_np, validation_set_np, testing_set_np, training_label_np, validation_label_np, testing_label_np = convert_sets_to_vector(
+        training_set, validation_set, testing_set, training_label, validation_label, testing_label, word_index_dict,
+        total_unique_words)
+
+
+    #print(training_set_np.shape)
+    #print(word_index_dict)
+    # count_fake = 0
+    # for label in training_label:
+    #     if label == 0: count_fake = count_fake + 1
+    #
+    # count_real = len(training_label) - count_fake
+    #
+    # P_fake = count_fake / float(len(training_label))
+    # P_real = 1. - P_fake
+
+    #print("P_fake = %s" %P_fake, "P_real = %s" %P_real)
+
+
+    #get P(fake | ~word) from training.np (size = 2287 x 5832 = #examples x #uniquewords)
+    #P(fake | ~word) = P( fake and ~word) / P(word)
 
 ###################### MAIN #############################
 part3a()
